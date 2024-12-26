@@ -27,7 +27,7 @@ import DataViewItem from './dataview-item';
 import AddNewItem from './add-new-view';
 import { unlock } from '../../lock-unlock';
 
-const { useHistory, useLocation } = unlock( routerPrivateApis );
+const { useHistory } = unlock( routerPrivateApis );
 
 const EMPTY_ARRAY = [];
 
@@ -51,6 +51,7 @@ function RenameItemModalContent( { dataviewId, currentTitle, setIsRenaming } ) {
 		>
 			<VStack spacing="5">
 				<TextControl
+					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 					label={ __( 'Name' ) }
 					value={ title }
@@ -61,6 +62,7 @@ function RenameItemModalContent( { dataviewId, currentTitle, setIsRenaming } ) {
 				<HStack justify="right">
 					<Button
 						variant="tertiary"
+						__next40pxDefaultSize
 						onClick={ () => {
 							setIsRenaming( false );
 						} }
@@ -71,8 +73,9 @@ function RenameItemModalContent( { dataviewId, currentTitle, setIsRenaming } ) {
 						variant="primary"
 						type="submit"
 						aria-disabled={ ! title }
+						__next40pxDefaultSize
 					>
-						{ __( 'Rename' ) }
+						{ __( 'Save' ) }
 					</Button>
 				</HStack>
 			</VStack>
@@ -81,9 +84,6 @@ function RenameItemModalContent( { dataviewId, currentTitle, setIsRenaming } ) {
 }
 
 function CustomDataViewItem( { dataviewId, isActive } ) {
-	const {
-		params: { path },
-	} = useLocation();
 	const history = useHistory();
 	const { dataview } = useSelect(
 		( select ) => {
@@ -110,7 +110,7 @@ function CustomDataViewItem( { dataviewId, isActive } ) {
 				title={ dataview.title }
 				type={ type }
 				isActive={ isActive }
-				isCustom="true"
+				isCustom
 				customViewId={ dataviewId }
 				suffix={
 					<DropdownMenu
@@ -145,9 +145,10 @@ function CustomDataViewItem( { dataviewId, isActive } ) {
 											}
 										);
 										if ( isActive ) {
-											history.replace( {
-												path,
-											} );
+											const {
+												params: { postType },
+											} = history.getLocationWithParams();
+											history.replace( { postType } );
 										}
 										onClose();
 									} }
@@ -162,10 +163,12 @@ function CustomDataViewItem( { dataviewId, isActive } ) {
 			/>
 			{ isRenaming && (
 				<Modal
-					title={ __( 'Rename view' ) }
+					title={ __( 'Rename' ) }
 					onRequestClose={ () => {
 						setIsRenaming( false );
 					} }
+					focusOnMount="firstContentElement"
+					size="small"
 				>
 					<RenameItemModalContent
 						dataviewId={ dataviewId }
@@ -209,14 +212,14 @@ export default function CustomDataViewsList( { type, activeView, isCustom } ) {
 			<div className="edit-site-sidebar-navigation-screen-dataviews__group-header">
 				<Heading level={ 2 }>{ __( 'Custom Views' ) }</Heading>
 			</div>
-			<ItemGroup>
+			<ItemGroup className="edit-site-sidebar-navigation-screen-dataviews__custom-items">
 				{ customDataViews.map( ( customViewRecord ) => {
 					return (
 						<CustomDataViewItem
 							key={ customViewRecord.id }
 							dataviewId={ customViewRecord.id }
 							isActive={
-								isCustom === 'true' &&
+								isCustom &&
 								Number( activeView ) === customViewRecord.id
 							}
 						/>

@@ -6,11 +6,6 @@ For more infos about blocks patterns, read [this](https://make.wordpress.org/cor
 
 ![Block patterns sidebar in WordPress 5.5](https://make.wordpress.org/core/files/2020/09/blocks-patterns-sidebar-in-wordpress-5-5.png)
 
-## Table of contents
-
-1. [Development guidelines](#development-guidelines)
-2. [Related components](#related-components)
-
 ## Development guidelines
 
 ### Usage
@@ -23,7 +18,6 @@ import { BlockPatternsList } from '@wordpress/block-editor';
 const MyBlockPatternsList = () => (
 	<BlockPatternsList
 		blockPatterns={ shownBlockPatterns }
-		shownPatterns={ shownBlockPatterns }
 		onClickPattern={ onSelectBlockPattern }
 	/>
 );
@@ -34,13 +28,6 @@ const MyBlockPatternsList = () => (
 #### blockPatterns
 
 An array of block patterns that can be shown in the block patterns list.
-
--   Type: `Array`
--   Required: Yes
-
-#### shownPatterns
-
-An array of shown block patterns objects.
 
 -   Type: `Array`
 -   Required: Yes
@@ -73,6 +60,14 @@ The aria label for the block patterns list.
 -   Type: `string`
 -   Required: No
 -   Default: `Block Patterns`
+
+#### showTitlesAsTooltip
+
+Whether to render the title of each pattern as a tooltip. User-defined patterns always show their visual title regardless of this prop.
+
+-   Type: `boolean`
+-   Required: No
+-   Default: `false`
 
 ## Related components
 

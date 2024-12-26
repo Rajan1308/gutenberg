@@ -1,13 +1,8 @@
 /**
- * External dependencies
- */
-import classnames from 'classnames';
-
-/**
  * WordPress dependencies
  */
 import { useRef } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, _x } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import {
 	FormFileUpload,
@@ -48,6 +43,7 @@ const MediaReplaceFlow = ( {
 	onError,
 	onSelect,
 	onSelectURL,
+	onReset,
 	onToggleFeaturedImage,
 	useFeaturedImage,
 	onFilesUpload = noop,
@@ -60,10 +56,7 @@ const MediaReplaceFlow = ( {
 	handleUpload = true,
 	popoverProps,
 } ) => {
-	const mediaUpload = useSelect( ( select ) => {
-		return select( blockEditorStore ).getSettings().mediaUpload;
-	}, [] );
-	const canUpload = !! mediaUpload;
+	const { getSettings } = useSelect( blockEditorStore );
 	const editMediaButtonRef = useRef();
 	const errorNoticeID = `block-editor/media-replace-flow/error-notice/${ ++uniqueId }`;
 
@@ -75,7 +68,7 @@ const MediaReplaceFlow = ( {
 		}
 		// We need to set a timeout for showing the notice
 		// so that VoiceOver and possibly other screen readers
-		// can announce the error afer the toolbar button
+		// can announce the error after the toolbar button
 		// regains focus once the upload dialog closes.
 		// Otherwise VO simply skips over the notice and announces
 		// the focused element and the open menu.
@@ -106,7 +99,7 @@ const MediaReplaceFlow = ( {
 			return onSelect( files );
 		}
 		onFilesUpload( files );
-		mediaUpload( {
+		getSettings().mediaUpload( {
 			allowedTypes,
 			filesList: files,
 			onFileChange: ( [ media ] ) => {
@@ -187,7 +180,7 @@ const MediaReplaceFlow = ( {
 												openFileDialog();
 											} }
 										>
-											{ __( 'Upload' ) }
+											{ _x( 'Upload', 'verb' ) }
 										</MenuItem>
 									);
 								} }
@@ -202,19 +195,23 @@ const MediaReplaceFlow = ( {
 								{ __( 'Use featured image' ) }
 							</MenuItem>
 						) }
-						{ children }
+						{ mediaURL && onReset && (
+							<MenuItem
+								onClick={ () => {
+									onReset();
+									onClose();
+								} }
+							>
+								{ __( 'Reset' ) }
+							</MenuItem>
+						) }
+						{ typeof children === 'function'
+							? children( { onClose } )
+							: children }
 					</NavigableMenu>
 					{ onSelectURL && (
 						// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-						<form
-							className={ classnames(
-								'block-editor-media-flow__url-input',
-								{
-									'has-siblings':
-										canUpload || onToggleFeaturedImage,
-								}
-							) }
-						>
+						<form className="block-editor-media-flow__url-input">
 							<span className="block-editor-media-replace-flow__image-url-label">
 								{ __( 'Current media URL:' ) }
 							</span>

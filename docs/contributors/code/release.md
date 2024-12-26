@@ -5,41 +5,10 @@ The [Gutenberg repository](https://github.com/WordPress/gutenberg) on GitHub is 
 Before you begin, there are some requirements that must be met in order to successfully release a stable version of the Gutenberg plugin. You will need to:
 
 -   Be a member of the [Gutenberg development team](https://developer.wordpress.org/block-editor/block-editor/contributors/repository-management/#teams). This gives you the ability to launch the GitHub actions that are related to the release process and to backport pull requests (PRs) to the release branch.
--   Have write permissions on the [Make WordPress Core](http://make.wordpress.org/core) blog. This allows you to draft the release post.
+-   Have write permissions on the [Make WordPress Core](https://make.wordpress.org/core) blog. This allows you to draft the release post.
 -   Obtain approval from a member of the Gutenberg Core team in order to upload the new version Gutenberg to the WordPress.org plugin directory.
 
 Similar requirements apply to releasing WordPress's [npm packages](https://developer.wordpress.org/block-editor/contributors/code/release/#packages-releases-to-npm-and-wordpress-core-updates).
-
-**Table of contents**
-
--   **[Gutenberg plugin releases](#gutenberg-plugin-releases)**
-    -   [Release schedule](#release-schedule)
-    -   [Release management](#release-management)
-    -   [Preparing a release](#preparing-a-release)
-        -   [Organizing and labeling milestone PRs](#organizing-and-labeling-milestone-prs)
-        -   [Running the release workflow](#running-the-release-workflow)
-        -   [Publishing the @wordpress packages to NPM](#publishing-the-wordpress-packages-to-npm)
-        -   [Viewing the release draft](#viewing-the-release-draft)
-        -   [Curating the release changelog](#curating-the-release-changelog)
-        -   [Creating release candidate patches (cherry-picking)](#creating-release-candidate-patches-cherry-picking)
-            -   [Automated cherry-picking](#automated-cherry-picking)
-            -   [Manual cherry-picking](#manual-cherry-picking)
-        -   [Publishing the release](#publishing-the-release)
-        -   [Troubleshooting the release](#troubleshooting-the-release)
-    -   [Documenting the release](#documenting-the-release)
-        -   [Selecting the release highlights](#selecting-the-release-highlights)
-        -   [Requesting release assets](#requesting-release-assets)
-        -   [Drafting the release post](#drafting-the-release-post)
-        -   [Publishing the release post](#publishing-the-release-post)
-    -   [Creating minor releases](#creating-minor-releases)
-        -   [Updating the release branch](#updating-the-release-branch)
-        -   [Running the minor release](#running-the-minor-release)
-        -   [Creating a minor release for previous stable releases](#creating-a-minor-release-for-previous-stable-releases)
-        -   [Troubleshooting](#troubleshooting)
--   [Packages releases to NPM and WordPress Core updates](#packages-releases-to-npm-and-wordpress-core-updates)
-    -   [Synchronizing the Gutenberg plugin](#synchronizing-the-gutenberg-plugin)
-    -   [WordPress releases](#wordpress-releases)
-    -   [Development releases](#development-releases)
 
 ## Gutenberg plugin releases
 
@@ -254,11 +223,11 @@ Once approved, the new Gutenberg version will be available to WordPress users al
 
 The final step is to write a release post on [make.wordpress.org/core](https://make.wordpress.org/core/). You can find some tips on that below.
 
-#### Troubleshooting the release
+### Troubleshooting the release
 
 > The plugin was published to the WordPress.org plugin directory but the workflow failed.
 
-This has happened ocassionally, see [this one](https://github.com/WordPress/gutenberg/actions/runs/6955409957/job/18924124118) for example.
+This has happened occasionally, see [this one](https://github.com/WordPress/gutenberg/actions/runs/6955409957/job/18924124118) for example.
 
 It's important to check that:
 
@@ -351,13 +320,13 @@ If an RC already exists for a new version, you _need_ to cherry-pick the same co
 
 The cherry-picking process can be automated with the [`npm run cherry-pick`](/docs/contributors/code/auto-cherry-picking.md) script, but be sure to use the `Backport to Gutenberg Minor Release` label when running the script.
 
-You must also ensure that all PRs being included are assigned to the Github Milestone on which the minor release is based. Bear in mind, that when PRs are _merged_ they are automatically assigned a milestone for the next _stable_ release. Therefore you will need to go back through each PR in Github and re-assign the Milestone.
+You must also ensure that all PRs being included are assigned to the GitHub Milestone on which the minor release is based. Bear in mind, that when PRs are _merged_ they are automatically assigned a milestone for the next _stable_ release. Therefore you will need to go back through each PR in GitHub and re-assign the Milestone.
 
 For example, if you are releasing version `12.5.4`, then all PRs picked for that release must be unassigned from the `12.6` Milestone and instead assigned to the `12.5` Milestone.
 
 Once cherry picking is complete, you can also remove the `Backport to Gutenberg Minor Release` label from the PRs.
 
-Once you have the stable release branch in order and the correct Milestone assigned to your PRs you can _push the branch to Github_ and continue with the release process using the Github website GUI.
+Once you have the stable release branch in order and the correct Milestone assigned to your PRs you can _push the branch to GitHub_ and continue with the release process using the GitHub website GUI.
 
 #### Running the minor release
 
@@ -375,7 +344,7 @@ To do this, when running the Workflow, select the appropriate `release/` branch 
 
 It is possible to create a minor release for any release branch even after a more recent stable release has been published. This can be done for _any_ previous release branches, allowing more flexibility in delivering updates to users. In the past, users had to wait for the next stable release, potentially taking days. Now, fixes can be swiftly shipped to any previous release branches as required.
 
-The process is identical to the one documented above when an RC is already out: choose a previous release branch, type `stable`, and click "Run workflow". The release will be published on the GitHub releases page for Gutenberg and to the WordPress core repository SVN as a `tag` under http://plugins.svn.wordpress.org/gutenberg/tags/. The SVN `trunk` directory will not be touched.
+The process is identical to the one documented above when an RC is already out: choose a previous release branch, type `stable`, and click "Run workflow". The release will be published on the GitHub releases page for Gutenberg and to the WordPress core repository SVN as a `tag` under https://plugins.svn.wordpress.org/gutenberg/tags/. The SVN `trunk` directory will not be touched.
 
 **IMPORTANT:** When publishing the draft created by the ["Build Plugin Zip" workflow](https://github.com/WordPress/gutenberg/actions/workflows/build-plugin-zip.yml), make sure to leave the "Set as last release" checkbox unchecked. If it is left checked by accident, the ["Upload Gutenberg plugin to WordPress.org plugin" workflow](https://github.com/WordPress/gutenberg/actions/workflows/upload-release-to-plugin-repo.yml) will still correctly upload it **as a tag (and will _not_ replace the `trunk` version)** to the WordPress plugin repository SVN - the workflow will perform some version arithmetic to determine how the plugin should be shipped - but you'll still need to fix the state on GitHub by setting the right release as `latest` on the [releases](https://github.com/WordPress/gutenberg/releases/) page!
 
